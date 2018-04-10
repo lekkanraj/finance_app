@@ -6,18 +6,27 @@ import Header from './components/Header/Header';
 import Body from './components/Body/Body';
 import Footer from './components/Footer/Footer';
 import Login from './components/Login/Login';
+import Home from './components/Home/Home';
+
+//Import Styles
+import './custom.css';
 
 class App extends Component {
   render() {
     return (
       <Router>
-        <div className="App container-fluid bg-success">
+        <div className="App Appcontent container-fluid bg-dark">
+          <div className="content">
           <Header />
-          <Body />
+          {/*<Body />*/}
+          <div className="min-height-500">
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path='/login' component={Login} />
+            </Switch>
+          </div>
           <Footer />
-        <Switch>
-          <Route exact path='/login' component={Login} />
-        </Switch>
+          </div>
         </div>
       </Router>
     );

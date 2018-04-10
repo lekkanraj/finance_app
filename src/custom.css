@@ -1,0 +1,12 @@
+
+.Appcontent{
+    height:auto;
+    min-height:630px;
+  }
+
+body{
+    color:white;
+}
+.min-height-500{
+    min-height:500px;
+}

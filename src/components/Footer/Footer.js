@@ -4,8 +4,12 @@ class Footer extends Component{
 
     render(){
         return(
-            <div className="">
-                Footer Here
+            <div className="row">
+                <div className="col-lg-12">
+                    <div className="text-center">
+                       <p> &copy; {new Date().getFullYear()} FinApp.com</p>
+                    </div>
+                </div>
             </div>
         )
     }
