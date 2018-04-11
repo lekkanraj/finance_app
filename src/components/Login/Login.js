@@ -50,11 +50,11 @@ class Login extends Component{
                             <form name="login" className="text-dark" onSubmit={this.userlogin}>
                                 <div className="form-group">
                                     <label className="" for="username">User Name</label>
-                                    <input type="text" className="form-control" name="username"/>
+                                    <input type="text" className="form-control" name="username" autocomplete="off" required/>
                                 </div>
                                 <div className="form-group">
                                     <label className="" for="password">Password</label>
-                                    <input type="password" className="form-control" name="password" />
+                                    <input type="password" className="form-control" name="password" autocomplete="off" required/>
                                 </div>
                                 <div className="text-center">
                                     <button name="login" className="btn btn-primary m-1" type="submit">Login</button>

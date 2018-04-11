@@ -11,7 +11,7 @@ class Header extends Component{
                  {
                     sessionStorage.getItem('isloggedin')==1 ? (
                         <Link className="navbar-brand" to="/">
-                            {sessionStorage.getItem('firstname')}
+                            Welcome {sessionStorage.getItem('firstname')},
                         </Link>
                     ):''
                 }
