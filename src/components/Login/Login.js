@@ -39,7 +39,7 @@ class Login extends Component{
     }
     render(){
         return(
-            <div className="row">
+            <div className="row mt-5">
                 <div className="col-lg-12">
                     <div className="col-lg-4 col-sm-3 float-left">&nbsp;</div>
                     <div className="col-lg-4 col-sm-6 float-left">
