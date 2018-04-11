@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 
+
 //Import Components
 import Header from './components/Header/Header';
 import Body from './components/Body/Body';
 import Footer from './components/Footer/Footer';
 import Login from './components/Login/Login';
+import Logout from './components/Login/Logout';
 import Home from './components/Home/Home';
 
 //Import Styles
@@ -21,8 +23,10 @@ class App extends Component {
           {/*<Body />*/}
           <div className="min-height-500">
             <Switch>
-              <Route exact path="/" component={Home} />
+              <Route exact path="/" component={Login} />
               <Route exact path='/login' component={Login} />
+              <Route exact path="/logout" component={Logout} />
+              <Route exact path="/home" component={Home} />
             </Switch>
           </div>
           <Footer />

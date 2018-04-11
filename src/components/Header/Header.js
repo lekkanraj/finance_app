@@ -5,16 +5,30 @@ class Header extends Component{
 
     render(){
         return(
-            <div className="row">
+            <div className="row pb-3">
                 <div className="col-lg-12">
-                    <ul className="nav">
-                        <li className="navitem p-1">
-                            <Link to ="/">Home</Link>
-                        </li>
-                        <li className="navitem p-1">
-                            <Link to="/login">Login</Link>
-                        </li>
+                 <nav className="navbar navbar-expand-xl">
+                 {
+                    sessionStorage.getItem('isloggedin')==1 ? (
+                        <Link className="navbar-brand" to="/">
+                            {sessionStorage.getItem('firstname')}
+                        </Link>
+                    ):''
+                }
+                  <ul className="navbar-nav">
+                    {/*<li className="nav-item p-1">
+                        <Link className="nav-link" to ="/">Home</Link>
+                    </li>*/}
+                    {
+                        sessionStorage.getItem('isloggedin')==1 ? (
+                            
+                            <li className="nav-item p-1">
+                                <Link className="nav-link" to="/logout">Logout</Link>
+                            </li>
+                        ) :''
+                    }
                     </ul>
+                    </nav>
                 </div>
             </div>
         )
