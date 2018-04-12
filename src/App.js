@@ -9,6 +9,7 @@ import Footer from './components/Footer/Footer';
 import Login from './components/Login/Login';
 import Logout from './components/Login/Logout';
 import Home from './components/Home/Home';
+import Customers from './components/Customers/Customers';
 
 //Import Styles
 import './custom.css';
@@ -17,7 +18,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div className="App Appcontent container-fluid bg-dark">
+        <div className="App Appcontent container bg-dark">
           <div className="content">
           <Header />
           {/*<Body />*/}
@@ -27,6 +28,7 @@ class App extends Component {
               <Route exact path='/login' component={Login} />
               <Route exact path="/logout" component={Logout} />
               <Route exact path="/home" component={Home} />
+              <Route exact path="/customers" component={Customers} />
             </Switch>
           </div>
           <Footer />

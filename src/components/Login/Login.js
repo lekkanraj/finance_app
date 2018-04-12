@@ -4,7 +4,12 @@ class Login extends Component{
     constructor(props){
         super(props);
         //sessionStorage.setItem('name','Lekkan');
+        
+        if(sessionStorage.getItem('isloggedin')==1){
+            this.props.history.push('/home');
+        }        
         this.userlogin=this.userlogin.bind(this);
+
     }
 
     userlogin(event){
