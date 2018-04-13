@@ -10,3 +10,11 @@ body{
 .min-height-500{
     min-height:500px;
 }
+
+.customerAddForm .form-group{
+    padding-bottom: 5px !important;
+}
+.customer-list .thead .tr .td,
+.customer-list .tr .td{
+    padding:4px !important;
+}

@@ -52,7 +52,7 @@ class Login extends Component{
                             <div className="pb-2 text-center">
                                 <h3 className="text-primary">Fin-App Login</h3>
                             </div>
-                            <form name="login" className="text-dark" onSubmit={this.userlogin}>
+                            <form name="login" className="from-inline text-dark" onSubmit={this.userlogin}>
                                 <div className="form-group">
                                     <label className="" for="username">User Name</label>
                                     <input type="text" className="form-control" name="username" autocomplete="off" required/>
@@ -61,7 +61,7 @@ class Login extends Component{
                                     <label className="" for="password">Password</label>
                                     <input type="password" className="form-control" name="password" autocomplete="off" required/>
                                 </div>
-                                <div className="text-center">
+                                <div className="form-group text-center">
                                     <button name="login" className="btn btn-primary m-1" type="submit">Login</button>
                                     <button name="Clear" className="btn btn-info" type="reset">Reset</button>
                                 </div>
