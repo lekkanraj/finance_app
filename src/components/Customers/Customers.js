@@ -1,15 +1,20 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+
 class Customers extends Component{
    constructor(props){
         super(props);
-        this.state={customers:[],addstatus:''};
+        this.state={customers:[],addstatus:'',getcustomerinfo:[0]};
 
         this.addcustomer=this.addcustomer.bind(this);
+        this.editcustomer=this.editcustomer.bind(this);
+        this.updatecustomer=this.updatecustomer.bind(this);
+        this.handleChange=this.handleChange.bind(this);
     }
     
     componentWillMount(){
         fetch('http://localhost/finance_service/customers/list.php')
-            .then((response)=>response.json())
+            .then(response=>response.json())
             .then((responsejson)=>
             {
                 this.setState({customers:responsejson})
@@ -26,9 +31,11 @@ class Customers extends Component{
         })
         .then((response)=>response.json())
         .then((responsedata)=>{
-            if(responsedata){
+            if(responsedata.length>0){
                this.setState({addstatus:"Added Customer"});
+               this.setState({customers:responsedata});
                document.getElementById("addformclose").click();
+               document.getElementById("customerAddForm").reset();
                this.props.history.push('/customers');
             }else{
                 this.setState({addstatus:"Failed to add"});
@@ -36,9 +43,52 @@ class Customers extends Component{
             
         }
         );
-
-
     }
+
+    editcustomer(id){
+       // console.log(id);
+        fetch('http://localhost/finance_service/customers/get_customerinfo.php?id='+id)
+            .then((response)=>response.json())
+            .then((responsejson)=>
+            {
+                this.setState({getcustomerinfo:responsejson});
+            }
+        );
+    }
+
+    updatecustomer(event){
+        event.preventDefault();
+        const data = new FormData(event.target);
+        fetch('http://localhost/finance_service/customers/update.php', {
+            method: 'POST',            
+            body:data,
+        })
+        .then((response)=>response.json())
+        .then((responsedata)=>{
+            if(responsedata){
+               this.setState({addstatus:"Updated Customer"});
+               this.setState({customers:responsedata});
+               document.getElementById("updateformclose").click();
+               this.props.history.push('/customers');
+            }else{
+                this.setState({addstatus:"Failed to update"});
+            }
+            
+        }
+        );
+    }
+
+    handleChange(event){
+        //var tar = event.target.name;
+        //var tarstate=this.getcustomerinfo[0];
+        /* this.setState(
+                {
+                   [event.target.name]:event.target.value
+                }
+        ); */
+        console.log("edsfsdjfhjsdh");
+    }
+
     
 
     render(){
@@ -52,7 +102,7 @@ class Customers extends Component{
                         
                         {this.state.addstatus ? 
                         <div className="alert alert-info text-warning data-dissmissble">
-                            <p>{this.state.addstatus}<button className="close" data-dismiss="alert">&times;</button></p>
+                            {this.state.addstatus}<button className="close" data-dismiss="alert">&times;</button>
                         </div>
                         :''}
                         <div className="table-reposive customer-list">
@@ -72,7 +122,7 @@ class Customers extends Component{
                                     {this.state.customers.map((customer,i)=>
                                         <tr>
                                             <td>{customer.cus_id}</td>
-                                            <td>{customer.cus_name}</td>
+                                            <td><a onClick={()=>this.editcustomer(customer.cus_id)} href="javascript:;" data-toggle="modal" data-target="#editUser">{customer.cus_name}</a></td>
                                             <td>{customer.mobile_no}</td>
                                             <td>{customer.cur_addr ? customer.cur_addr :"-"}</td>
                                             <td>{customer.bailee_name ? customer.bailee_name :"-"}</td>
@@ -91,6 +141,155 @@ class Customers extends Component{
                                 </tbody>
                             </table>
                         </div>
+                        <div className="modal fade" id="editUser">
+                            <div className="modal-dialog">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <div className="modal-title text-center">
+                                            <h4 className="text-info">Edit Customer Info</h4>                                           
+                                        </div>
+                                        <div className="float-right">
+                                                <button className="close" id="updateformclose" data-dismiss="modal">&times;</button>
+                                        </div>
+                                    </div>
+                                    <div className="modal-body">
+                                        <form className="text-dark customerAddForm" onSubmit={this.updatecustomer}>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Name</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <input className="form-control cus_name" id="cus_name" required name="cus_name" type="text" value={this.state.getcustomerinfo[0].cus_name} onChange = {this.handleChange} />
+                                                        <input className="form-control cus_id" id="cus_id" required name="cus_id" type="hidden" value={this.state.getcustomerinfo[0].cus_id} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Job</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <input className="form-control job_name" required name="job_name" type="text" value={this.state.getcustomerinfo[0].job_name} onChange = {this.handleChange}  />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Mobile No</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <input className="form-control mobile_no" required name="mobile_no" type="text" value={this.state.getcustomerinfo[0].mobile_no} onChange = {this.handleChange} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Current Address</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <input className="form-control cur_addr" name="cur_addr" type="text" value={this.state.getcustomerinfo[0].cur_addr} onChange = {this.handleChange} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Permanent Address</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <input className="form-control per_addr" name="per_addr" type="text"  value={this.state.getcustomerinfo[0].per_addr} onChange = {this.handleChange}  />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>House Type</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <select className="form-control house" required name="house" value={this.state.getcustomerinfo[0].house?this.state.getcustomerinfo[0].house:''} onChange = {this.handleChange}  >
+                                                            <option value="">Select House</option>
+                                                            <option value="1">Own House</option>
+                                                            <option value="2">Rental House</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Bailee Name</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <input className="form-control bailee_name" required name="bailee_name" type="text" required  value={this.state.getcustomerinfo[0].bailee_name} onChange = {this.handleChange}  />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Bailee Mobile No</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <input className="form-control bailee_mob" required name="bailee_mob" type="text" required  value={this.state.getcustomerinfo[0].bailee_mob} onChange = {this.handleChange} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Security Type</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <select className="form-control security_type" name="security_type"  value={this.state.getcustomerinfo[0].security_type ? this.state.getcustomerinfo[0].security_type:''} onChange = {this.handleChange} >
+                                                            <option value="">Select</option>
+                                                            <option value="1">AADHAR</option>
+                                                            <option value="2">Voter ID</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Security ID</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <input className="form-control security_id" name="security_id" type="text"  value={this.state.getcustomerinfo[0].security_id} onChange = {this.handleChange} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-sm-12">
+                                                        <label>Line(Area)</label>
+                                                    </div>
+                                                    <div className="col-lg-8 col-sm-12">
+                                                        <select className="form-control line_id" name="line_id"  value={this.state.getcustomerinfo[0].line_id ? this.state.getcustomerinfo[0].line_id:''} onChange = {this.handleChange} >
+                                                            <option value="">Select</option>
+                                                            <option value="1">Velachery</option>
+                                                            <option value="2">Guindy</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-lg-12 text-center col-sm-12">
+                                                        <button className="btn btn-primary" name="updatecustomer" type="submit">Update</button>
+                                                        <button className="btn btn-warning ml-2" name="cancel close" data-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div className="modal fade" id="addUser">
                             <div className="modal-dialog">
                                 <div className="modal-content">
@@ -103,7 +302,7 @@ class Customers extends Component{
                                         </div>
                                     </div>
                                     <div className="modal-body">
-                                        <form className="text-dark customerAddForm" onSubmit={this.addcustomer}>
+                                        <form className="text-dark customerAddForm" onSubmit={this.addcustomer} id="customerAddForm">
                                             <div className="form-group">
                                                 <div className="row">
                                                     <div className="col-lg-4 col-sm-12">
@@ -161,6 +360,7 @@ class Customers extends Component{
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control" required name="house">
+                                                            <option value="">Select</option>
                                                             <option value="1">Own House</option>
                                                             <option value="2">Rental House</option>
                                                         </select>
@@ -194,6 +394,7 @@ class Customers extends Component{
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control" name="security_type">
+                                                            <option value="">Select</option>
                                                             <option value="1">AADHAR</option>
                                                             <option value="2">Voter ID</option>
                                                         </select>
@@ -217,6 +418,7 @@ class Customers extends Component{
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control" name="line_id">
+                                                            <option value="">Select</option>
                                                             <option value="1">Velachery</option>
                                                             <option value="2">Guindy</option>
                                                         </select>
