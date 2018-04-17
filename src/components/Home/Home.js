@@ -14,7 +14,6 @@ class Home extends Component{
             <div className="row mt-5">
                 <div className="col-lg-12">
                     <p className=""> Home page content here</p>
-                    <Customers />
                 </div>
             </div>
         )

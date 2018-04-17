@@ -11,6 +11,8 @@ import Logout from './components/Login/Logout';
 import Home from './components/Home/Home';
 import Customers from './components/Customers/Customers';
 
+import Lines from './components/Lines/Lines';
+
 //Import Styles
 import './custom.css';
 
@@ -29,6 +31,7 @@ class App extends Component {
               <Route exact path="/logout" component={Logout} />
               <Route exact path="/home" component={Home} />
               <Route exact path="/customers" component={Customers} />
+              <Route exact path="/lines" component={Lines} />
             </Switch>
           </div>
           <Footer />

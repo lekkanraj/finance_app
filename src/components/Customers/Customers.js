@@ -4,7 +4,13 @@ import {Link} from 'react-router-dom';
 class Customers extends Component{
    constructor(props){
         super(props);
-        this.state={customers:[],addstatus:'',getcustomerinfo:[0]};
+        this.state={
+            customers:[],
+            addstatus:'',
+            getcustomerinfo:[0],
+            housetypes:[],
+            securitytypes:[]
+        };
 
         this.addcustomer=this.addcustomer.bind(this);
         this.editcustomer=this.editcustomer.bind(this);
@@ -13,11 +19,28 @@ class Customers extends Component{
     }
     
     componentWillMount(){
+        /**Customer List */
         fetch('http://localhost/finance_service/customers/list.php')
             .then(response=>response.json())
             .then((responsejson)=>
             {
                 this.setState({customers:responsejson})
+            }
+        );
+        /**House Type List */
+        fetch('http://localhost/finance_service/customers/get_data.php?info=house')
+            .then(response=>response.json())
+            .then((responsejson)=>
+            {
+                this.setState({housetypes:responsejson})
+            }
+        );
+        /**Security List */
+        fetch('http://localhost/finance_service/customers/get_data.php?info=security')
+            .then(response=>response.json())
+            .then((responsejson)=>
+            {
+                this.setState({securitytypes:responsejson})
             }
         );
     }
@@ -51,7 +74,7 @@ class Customers extends Component{
             .then((response)=>response.json())
             .then((responsejson)=>
             {
-                this.setState({getcustomerinfo:responsejson});
+                this.setState({getcustomerinfo:responsejson[0]});
             }
         );
     }
@@ -69,6 +92,7 @@ class Customers extends Component{
                this.setState({addstatus:"Updated Customer"});
                this.setState({customers:responsedata});
                document.getElementById("updateformclose").click();
+              // document.getElementById("customerEditForm").reset();
                this.props.history.push('/customers');
             }else{
                 this.setState({addstatus:"Failed to update"});
@@ -79,14 +103,12 @@ class Customers extends Component{
     }
 
     handleChange(event){
-        //var tar = event.target.name;
-        //var tarstate=this.getcustomerinfo[0];
-        /* this.setState(
-                {
-                   [event.target.name]:event.target.value
-                }
-        ); */
-        console.log("edsfsdjfhjsdh");
+        const { getcustomerinfo } = this.state;
+        const newlineinfo = {
+          ...getcustomerinfo,
+          [event.target.name]: event.target.value
+        };
+        this.setState({ getcustomerinfo: newlineinfo });
     }
 
     
@@ -121,7 +143,7 @@ class Customers extends Component{
                                 <tbody>
                                     {this.state.customers.map((customer,i)=>
                                         <tr>
-                                            <td>{customer.cus_id}</td>
+                                            <td>{i+1}</td>
                                             <td><a onClick={()=>this.editcustomer(customer.cus_id)} href="javascript:;" data-toggle="modal" data-target="#editUser">{customer.cus_name}</a></td>
                                             <td>{customer.mobile_no}</td>
                                             <td>{customer.cur_addr ? customer.cur_addr :"-"}</td>
@@ -153,15 +175,15 @@ class Customers extends Component{
                                         </div>
                                     </div>
                                     <div className="modal-body">
-                                        <form className="text-dark customerAddForm" onSubmit={this.updatecustomer}>
+                                        <form className="text-dark customerEditForm" onSubmit={this.updatecustomer}>
                                             <div className="form-group">
                                                 <div className="row">
                                                     <div className="col-lg-4 col-sm-12">
                                                         <label>Name</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <input className="form-control cus_name" id="cus_name" required name="cus_name" type="text" value={this.state.getcustomerinfo[0].cus_name} onChange = {this.handleChange} />
-                                                        <input className="form-control cus_id" id="cus_id" required name="cus_id" type="hidden" value={this.state.getcustomerinfo[0].cus_id} />
+                                                        <input className="form-control cus_name" id="cus_name" required name="cus_name" type="text" value={this.state.getcustomerinfo.cus_name} onChange = {this.handleChange} />
+                                                        <input className="form-control cus_id" id="cus_id" required name="cus_id" type="hidden" value={this.state.getcustomerinfo.cus_id} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -171,7 +193,7 @@ class Customers extends Component{
                                                         <label>Job</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <input className="form-control job_name" required name="job_name" type="text" value={this.state.getcustomerinfo[0].job_name} onChange = {this.handleChange}  />
+                                                        <input className="form-control job_name" required name="job_name" type="text" value={this.state.getcustomerinfo.job_name} onChange = {this.handleChange}  />
                                                     </div>
                                                 </div>
                                             </div>
@@ -181,7 +203,7 @@ class Customers extends Component{
                                                         <label>Mobile No</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <input className="form-control mobile_no" required name="mobile_no" type="text" value={this.state.getcustomerinfo[0].mobile_no} onChange = {this.handleChange} />
+                                                        <input className="form-control mobile_no" required name="mobile_no" type="text" value={this.state.getcustomerinfo.mobile_no} onChange = {this.handleChange} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -191,7 +213,7 @@ class Customers extends Component{
                                                         <label>Current Address</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <input className="form-control cur_addr" name="cur_addr" type="text" value={this.state.getcustomerinfo[0].cur_addr} onChange = {this.handleChange} />
+                                                        <input className="form-control cur_addr" name="cur_addr" type="text" value={this.state.getcustomerinfo.cur_addr} onChange = {this.handleChange} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -201,7 +223,7 @@ class Customers extends Component{
                                                         <label>Permanent Address</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <input className="form-control per_addr" name="per_addr" type="text"  value={this.state.getcustomerinfo[0].per_addr} onChange = {this.handleChange}  />
+                                                        <input className="form-control per_addr" name="per_addr" type="text"  value={this.state.getcustomerinfo.per_addr} onChange = {this.handleChange}  />
                                                     </div>
                                                 </div>
                                             </div>
@@ -211,10 +233,11 @@ class Customers extends Component{
                                                         <label>House Type</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <select className="form-control house" required name="house" value={this.state.getcustomerinfo[0].house?this.state.getcustomerinfo[0].house:''} onChange = {this.handleChange}  >
+                                                        <select className="form-control house" required name="house" value={this.state.getcustomerinfo.house?this.state.getcustomerinfo.house:''} onChange = {this.handleChange}  >
                                                             <option value="">Select House</option>
-                                                            <option value="1">Own House</option>
-                                                            <option value="2">Rental House</option>
+                                                            {this.state.housetypes.map((house,i)=>
+                                                            <option value={house.house_id}>{house.house_type}</option>
+                                                            )}
                                                         </select>
                                                     </div>
                                                 </div>
@@ -225,7 +248,7 @@ class Customers extends Component{
                                                         <label>Bailee Name</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <input className="form-control bailee_name" required name="bailee_name" type="text" required  value={this.state.getcustomerinfo[0].bailee_name} onChange = {this.handleChange}  />
+                                                        <input className="form-control bailee_name" required name="bailee_name" type="text" required  value={this.state.getcustomerinfo.bailee_name} onChange = {this.handleChange}  />
                                                     </div>
                                                 </div>
                                             </div>
@@ -235,7 +258,7 @@ class Customers extends Component{
                                                         <label>Bailee Mobile No</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <input className="form-control bailee_mob" required name="bailee_mob" type="text" required  value={this.state.getcustomerinfo[0].bailee_mob} onChange = {this.handleChange} />
+                                                        <input className="form-control bailee_mob" required name="bailee_mob" type="text" required  value={this.state.getcustomerinfo.bailee_mob} onChange = {this.handleChange} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -245,10 +268,11 @@ class Customers extends Component{
                                                         <label>Security Type</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <select className="form-control security_type" name="security_type"  value={this.state.getcustomerinfo[0].security_type ? this.state.getcustomerinfo[0].security_type:''} onChange = {this.handleChange} >
+                                                        <select className="form-control security_type" name="security_type"  value={this.state.getcustomerinfo.security_type ? this.state.getcustomerinfo.security_type:''} onChange = {this.handleChange} >
                                                             <option value="">Select</option>
-                                                            <option value="1">AADHAR</option>
-                                                            <option value="2">Voter ID</option>
+                                                            {this.state.securitytypes.map((security,i)=>
+                                                            <option value={security.security_id}>{security.security_name}</option>
+                                                            )}
                                                         </select>
                                                     </div>
                                                 </div>
@@ -259,7 +283,7 @@ class Customers extends Component{
                                                         <label>Security ID</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <input className="form-control security_id" name="security_id" type="text"  value={this.state.getcustomerinfo[0].security_id} onChange = {this.handleChange} />
+                                                        <input className="form-control security_id" name="security_id" type="text"  value={this.state.getcustomerinfo.security_id} onChange = {this.handleChange} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -269,7 +293,7 @@ class Customers extends Component{
                                                         <label>Line(Area)</label>
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
-                                                        <select className="form-control line_id" name="line_id"  value={this.state.getcustomerinfo[0].line_id ? this.state.getcustomerinfo[0].line_id:''} onChange = {this.handleChange} >
+                                                        <select className="form-control line_id" name="line_id"  value={this.state.getcustomerinfo.line_id ? this.state.getcustomerinfo.line_id:''} onChange = {this.handleChange} >
                                                             <option value="">Select</option>
                                                             <option value="1">Velachery</option>
                                                             <option value="2">Guindy</option>
@@ -361,8 +385,9 @@ class Customers extends Component{
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control" required name="house">
                                                             <option value="">Select</option>
-                                                            <option value="1">Own House</option>
-                                                            <option value="2">Rental House</option>
+                                                            {this.state.housetypes.map((house,i)=>
+                                                            <option value={house.house_id}>{house.house_type}</option>
+                                                            )}
                                                         </select>
                                                     </div>
                                                 </div>
@@ -395,8 +420,9 @@ class Customers extends Component{
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control" name="security_type">
                                                             <option value="">Select</option>
-                                                            <option value="1">AADHAR</option>
-                                                            <option value="2">Voter ID</option>
+                                                            {this.state.securitytypes.map((security,i)=>
+                                                            <option value={security.security_id}>{security.security_name}</option>
+                                                            )}
                                                         </select>
                                                     </div>
                                                 </div>
