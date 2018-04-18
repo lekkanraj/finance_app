@@ -21,7 +21,7 @@ class Login extends Component{
         })
         .then((response)=>response.json())
         .then((responsedata)=>{
-            console.log(responsedata.status)
+            //console.log(responsedata.status)
             //this.setState({isLoggedin:responsedata.status});
             //console.log(this.state.isLoggedin);
             if(responsedata.user_id>0){

@@ -234,10 +234,14 @@ class Customers extends Component{
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control house" required name="house" value={this.state.getcustomerinfo.house?this.state.getcustomerinfo.house:''} onChange = {this.handleChange}  >
-                                                            <option value="">Select House</option>
-                                                            {this.state.housetypes.map((house,i)=>
-                                                            <option value={house.house_id}>{house.house_type}</option>
-                                                            )}
+                                                            <option value="">Select House</option>                                                            
+                                                            {
+                                                            this.state.housetypes.length >0 ? (
+                                                                this.state.housetypes.map((house,i)=>
+                                                                    <option value={house.house_id}>{house.house_type}</option>
+                                                                )
+                                                            ) :""
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
@@ -270,9 +274,13 @@ class Customers extends Component{
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control security_type" name="security_type"  value={this.state.getcustomerinfo.security_type ? this.state.getcustomerinfo.security_type:''} onChange = {this.handleChange} >
                                                             <option value="">Select</option>
-                                                            {this.state.securitytypes.map((security,i)=>
-                                                            <option value={security.security_id}>{security.security_name}</option>
-                                                            )}
+                                                            {
+                                                                this.state.securitytypes.length >0 ? (
+                                                                    this.state.securitytypes.map((security,i)=>
+                                                                        <option value={security.security_id}>{security.security_name}</option>
+                                                                    )
+                                                                ) : ""
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
@@ -385,9 +393,13 @@ class Customers extends Component{
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control" required name="house">
                                                             <option value="">Select</option>
-                                                            {this.state.housetypes.map((house,i)=>
-                                                            <option value={house.house_id}>{house.house_type}</option>
-                                                            )}
+                                                            {
+                                                                this.state.housetypes ? (
+                                                                    this.state.housetypes.map((house,i)=>
+                                                                        <option value={house.house_id}>{house.house_type}</option>
+                                                                    )
+                                                                ) : "" 
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
@@ -420,9 +432,13 @@ class Customers extends Component{
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control" name="security_type">
                                                             <option value="">Select</option>
-                                                            {this.state.securitytypes.map((security,i)=>
-                                                            <option value={security.security_id}>{security.security_name}</option>
-                                                            )}
+                                                            {
+                                                                this.state.securitytypes.length > 0 ? (
+                                                                    this.state.securitytypes.map((security,i)=>
+                                                                        <option value={security.security_id}>{security.security_name}</option>
+                                                                    )
+                                                                ) : ""
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
