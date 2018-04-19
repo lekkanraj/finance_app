@@ -10,8 +10,8 @@ import Login from './components/Login/Login';
 import Logout from './components/Login/Logout';
 import Home from './components/Home/Home';
 import Customers from './components/Customers/Customers';
-
 import Lines from './components/Lines/Lines';
+import Finance from './components/Finance/Finanace';
 
 //Import Styles
 import './custom.css';
@@ -32,6 +32,7 @@ class App extends Component {
               <Route exact path="/home" component={Home} />
               <Route exact path="/customers" component={Customers} />
               <Route exact path="/lines" component={Lines} />
+              <Route exact path="/finance" component={Finance} />
             </Switch>
           </div>
           <Footer />

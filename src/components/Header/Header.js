@@ -22,6 +22,9 @@ class Header extends Component{
                             </li>,
                             <li className="nav-item p-1">
                                 <Link className="nav-link" to="/lines">Lines</Link>
+                            </li>,
+                            <li className="nav-item p-1">
+                                <Link className="nav-link" to="/finance">Finance Master</Link>
                             </li>
                         ] :''
                     }
