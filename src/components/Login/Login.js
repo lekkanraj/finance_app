@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {HOST} from '../../constants/constants';
 
 class Login extends Component{
     constructor(props){
@@ -15,7 +16,7 @@ class Login extends Component{
     userlogin(event){
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/finance_service/user/login.php', {
+        fetch(HOST+'user/login.php', {
             method: 'POST',            
             body:data,
         })

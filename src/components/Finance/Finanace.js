@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import Search from './Search';
+import {allCustomers} from '../../actions/financeActions';
+import {HOST} from '../../constants/constants';
 
 class Finance extends Component{
     constructor(props){
@@ -11,20 +14,25 @@ class Finance extends Component{
             error_message:''
         };
         this.editFinance=this.editFinance.bind(this);
-    }
-
-    componentWillMount(){
-        fetch("http://localhost/finance_service/finance/list.php")
+        var cuslist,searchpath="";
+        if(this.props.customers.linetypeselected){
+           searchpath="?linetype="+this.props.customers.linetypeselected;
+        }
+        if(this.props.customers.lineselected){
+            searchpath=searchpath+"&line="+this.props.customers.lineselected;
+        }
+        fetch(HOST+"finance/list.php"+searchpath)
             .then((response)=>response.json())
             .then((responsedata)=>{
-                this.setState({
-                    finance_cus:responsedata
-                });
+                cuslist=responsedata;
+                this.props.setAllCustomers(cuslist);
             }
         );
+        
+       
     }
 
-    editFinance($id){
+    editFinance(id){
         console.log("sdfd");
     }
     render(){
@@ -50,17 +58,17 @@ class Finance extends Component{
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {this.state.finance_cus.map((customer,i)=>
+                                    {this.props.customers.fin_customers.map((customer,i)=>
                                         <tr>
                                             <td>{i+1}</td>
                                             <td><a onClick={()=>this.editFinance(customer.cus_id)} href="javascript:;" data-toggle="modal" data-target="#editUser">{customer.cus_name}</a></td>
                                             <td>{customer.area ? customer.area :"-"}</td>
                                         </tr>
                                     )}
-                                    {this.state.finance_cus.length==0 ?                                    
+                                    {this.props.customers.fin_customers.length==0 ?                                    
                                         (
                                             <tr>
-                                                <td colspan="3">No Custoemrs Found</td>
+                                                <td colspan="3">No Customers Found</td>
                                             </tr>
 
                                         ):''
@@ -75,4 +83,22 @@ class Finance extends Component{
 
 }
 
-export default Finance;
+//export default Finance;
+
+const mapStateToProps=(state)=>{
+    return{
+        customers:state.finRed,
+    }
+
+};
+
+const mapDispatchToProps=(dispatch)=>{
+    return{
+        setAllCustomers:(customerslist)=>{
+            dispatch(allCustomers(0,customerslist));
+        }
+    }
+
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(Finance);

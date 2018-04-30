@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+import {HOST} from '../../constants/constants';
 
 class Lines extends Component{
     constructor(props){
@@ -11,14 +12,14 @@ class Lines extends Component{
     }
 
     componentWillMount(){
-        fetch('http://localhost/finance_service/lines/list.php')
+        fetch(HOST+'lines/list.php')
         .then((response)=>response.json())
         .then((responsedata)=>{
                 this.setState({lines:responsedata})
             }
         );
 
-        fetch('http://localhost/finance_service/lines/linetype_list.php')
+        fetch(HOST+'lines/linetype_list.php')
         .then((response)=>response.json())
         .then((responsedata)=>{
                 this.setState({linetypes:responsedata})
@@ -29,7 +30,7 @@ class Lines extends Component{
     addLine(event){
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/finance_service/lines/add.php', {
+        fetch(HOST+'lines/add.php', {
             method: 'POST',            
             body:data,
         })
@@ -51,7 +52,7 @@ class Lines extends Component{
     }
 
     editLine(id){
-        fetch('http://localhost/finance_service/lines/get_lineinfo.php?id='+id)
+        fetch(HOST+'lines/get_lineinfo.php?id='+id)
         .then((response)=>response.json())
         .then((responsejson)=>
         {
@@ -63,7 +64,7 @@ class Lines extends Component{
     updateLine(event){
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/finance_service/lines/update.php', {
+        fetch(HOST+'lines/update.php', {
             method: 'POST',            
             body:data,
         })

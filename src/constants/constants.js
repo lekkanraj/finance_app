@@ -1,0 +1,1 @@
+export const HOST="http://localhost/finance_service/";

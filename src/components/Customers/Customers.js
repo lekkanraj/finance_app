@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {HOST} from '../../constants/constants';
 
 class Customers extends Component{
    constructor(props){
@@ -8,7 +9,8 @@ class Customers extends Component{
             addstatus:'',
             getcustomerinfo:[0],
             housetypes:[],
-            securitytypes:[]
+            securitytypes:[],
+            lines:[]
         };
 
         this.addcustomer=this.addcustomer.bind(this);
@@ -19,7 +21,7 @@ class Customers extends Component{
     
     componentWillMount(){
         /**Customer List */
-        fetch('http://localhost/finance_service/customers/list.php')
+        fetch(HOST+'customers/list.php')
             .then(response=>response.json())
             .then((responsejson)=>
             {
@@ -27,7 +29,7 @@ class Customers extends Component{
             }
         );
         /**House Type List */
-        fetch('http://localhost/finance_service/customers/get_data.php?info=house')
+        fetch(HOST+'customers/get_data.php?info=house')
             .then(response=>response.json())
             .then((responsejson)=>
             {
@@ -35,19 +37,27 @@ class Customers extends Component{
             }
         );
         /**Security List */
-        fetch('http://localhost/finance_service/customers/get_data.php?info=security')
+        fetch(HOST+'customers/get_data.php?info=security')
             .then(response=>response.json())
             .then((responsejson)=>
             {
                 this.setState({securitytypes:responsejson})
             }
         );
+         /**Lines List */
+         fetch(HOST+'customers/get_data.php?info=lines')
+         .then(response=>response.json())
+         .then((responsejson)=>
+         {
+             this.setState({lines:responsejson})
+         }
+     );
     }
 
     addcustomer(event){
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/finance_service/customers/add.php', {
+        fetch(HOST+'customers/add.php', {
             method: 'POST',            
             body:data,
         })
@@ -69,7 +79,7 @@ class Customers extends Component{
 
     editcustomer(id){
        // console.log(id);
-        fetch('http://localhost/finance_service/customers/get_customerinfo.php?id='+id)
+        fetch(HOST+'customers/get_customerinfo.php?id='+id)
             .then((response)=>response.json())
             .then((responsejson)=>
             {
@@ -81,7 +91,7 @@ class Customers extends Component{
     updatecustomer(event){
         event.preventDefault();
         const data = new FormData(event.target);
-        fetch('http://localhost/finance_service/customers/update.php', {
+        fetch(HOST+'customers/update.php', {
             method: 'POST',            
             body:data,
         })
@@ -301,9 +311,14 @@ class Customers extends Component{
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control line_id" name="line_id"  value={this.state.getcustomerinfo.line_id ? this.state.getcustomerinfo.line_id:''} onChange = {this.handleChange} >
-                                                            <option value="">Select</option>
-                                                            <option value="1">Velachery</option>
-                                                            <option value="2">Guindy</option>
+                                                            <option value="">Select Line</option>
+                                                            {
+                                                            this.state.lines.length >0 ? (
+                                                                this.state.lines.map((line,i)=>
+                                                                    <option value={line.line_id}>{line.area}</option>
+                                                                )
+                                                            ) :""
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
@@ -459,9 +474,14 @@ class Customers extends Component{
                                                     </div>
                                                     <div className="col-lg-8 col-sm-12">
                                                         <select className="form-control" name="line_id">
-                                                            <option value="">Select</option>
-                                                            <option value="1">Velachery</option>
-                                                            <option value="2">Guindy</option>
+                                                            <option value="">Select Line</option>
+                                                            {
+                                                            this.state.lines.length >0 ? (
+                                                                this.state.lines.map((line,i)=>
+                                                                    <option value={line.line_id}>{line.area}</option>
+                                                                )
+                                                            ) :""
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
