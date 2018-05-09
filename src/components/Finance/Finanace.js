@@ -20,10 +20,20 @@ class Finance extends Component{
             error_message:'',
             lines:[],
             linetypes:[],
+            f_fin_amt:'',
+            f_comp_amt:'',
+            f_hand_amt:'',
+            f_hold_amt:'',
+            f_profit_amt:'',
+            f_start_date:'',
+            f_end_date:'',
         };
         this.editFinance=this.editFinance.bind(this);
         this.updateFinCustomer=this.updateFinCustomer.bind(this);
         this.handleChange=this.handleChange.bind(this);
+        this.startDateChange=this.startDateChange.bind(this);
+        this.endDateChange=this.endDateChange.bind(this);
+        this.finupdate=this.finupdate.bind(this);
         var cuslist,searchpath="";
         if(this.props.customers.linetypeselected){
            searchpath="?linetype="+this.props.customers.linetypeselected;
@@ -70,15 +80,68 @@ class Finance extends Component{
         .then((response)=>response.json())
         .then((responsejson)=>
         {
+            this.setState({finance_cusinfo:[0]});
             this.setState({finance_cusinfo:responsejson[0]});
+            this.setState({f_fin_amt:'',f_comp_amt:'',f_hand_amt:'',f_hold_amt:'',f_profit_amt:'',f_start_date:'',f_end_date:''});
+            var st_date=this.state.finance_cusinfo.fin_start;
+            console.log(st_date);
+            if(st_date){
+                this.setState({f_start_date:moment(st_date)});
+            }
+
+        
         }
         );
-        console.log(this.state.finance_cusinfo);
+        //console.log(this.state.finance_cusinfo);
+    }
+   
+    updateFinCustomer(event){
+        event.preventDefault();
+        const data = new FormData(event.target);
+        fetch(HOST+'finance/update_fincustomer.php', {
+            method: 'POST',            
+            body:data,
+        })
+        .then((response)=>response.json())
+        .then((responsedata)=>{
+            if(responsedata){
+               this.setState({success_message:"Updated Finance Info"});
+               document.getElementById("updateformclose").click();
+               this.props.history.push('/finance');
+            }else{
+                this.setState({error_message:"Failed to update"});
+            }
+            
+        }
+        );
     }
 
-    updateFinCustomer(){
+    
+    finupdate(event){
+        var name=event.target.name;
+        var val =event.target.value;
 
+        if(name=="fin_amt"){
+            this.setState({f_fin_amt:val,f_comp_amt:val});
+        }
+
+        if(name=="hold_amt"){
+            var to_hand;
+            to_hand=(this.state.f_fin_amt-val);
+            this.setState({f_hold_amt:val,f_hand_amt:to_hand});
+        }
     }
+    startDateChange(date){
+        this.setState({
+            f_start_date: date
+          });
+    }
+    endDateChange(date){
+        this.setState({
+            f_end_date: date
+          });
+    }
+
     render(){
         return(
             <div className="row">
@@ -89,6 +152,13 @@ class Finance extends Component{
                             {this.state.success_message}<button className="close" data-dismiss="alert">&times;</button>
                         </div>
                     :''}
+                    {this.state.error_message ? 
+                        <div className="alert alert-danger text-warning data-dissmissble">
+                            {this.state.error_message}<button className="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    :''}
+                    
+                    
                     <div className="row">
                     <Search />
                     </div>
@@ -144,7 +214,7 @@ class Finance extends Component{
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
                                                                 <label>: {this.state.finance_cusinfo.cus_name}</label>
-                                                                <input className="form-control cus_id" id="cus_id" required name="cus_id" type="hidden" value={this.state.finance_cusinfo.cus_id} />
+                                                                <input className="form-control cus_id" id="cus_id" name="cus_id" type="hidden" value={this.state.finance_cusinfo.cus_id} />
                                                             </div>
                                                         </div> 
                                                         <div className="row">
@@ -224,7 +294,7 @@ class Finance extends Component{
                                                                 <label className="name-label">Finance Amt</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                                <input className="form-control" id="fin_amt" name="fin_amt" required onChange={this.handleChange}/>
+                                                                <input className="form-control" id="fin_amt" name="fin_amt" required onChange={this.finupdate} value={this.state.f_fin_amt} />
                                                             </div>
                                                         </div> 
                                                         <div className="row">
@@ -232,7 +302,7 @@ class Finance extends Component{
                                                                 <label className="name-label">Hold Amount</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                            <input className="form-control" id="hold_amt" name="hold_amt" required onChange={this.handleChange}/>
+                                                            <input className="form-control" id="hold_amt" name="hold_amt" required onChange={this.finupdate} value={this.state.f_hold_amt} />
                                                             </div>
                                                         </div>   
                                                     </div>
@@ -242,7 +312,7 @@ class Finance extends Component{
                                                                 <label className="name-label">By Hand</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                                <input className="form-control" id="by_hand_amt" name="by_hand_amt" readonly="true" value={this.state.finance_cusinfo.by_hand_amt} onChange={this.handleChange}/>
+                                                                <input className="form-control" id="by_hand_amt" name="by_hand_amt"  value={this.state.f_hand_amt} />
                                                             </div>
                                                         </div> 
                                                         <div className="row">
@@ -250,7 +320,7 @@ class Finance extends Component{
                                                                 <label className="name-label">Company Amount</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                                <input className="form-control" id="cmpy_amt" name="cmpy_amt" value={this.state.finance_cusinfo.cmpy_amt} onChange={this.handleChange}/>
+                                                                <input className="form-control" id="cmpy_amt" name="cmpy_amt" onChange={this.finupdate} value={this.state.f_comp_amt}/>
                                                             </div>
                                                         </div>  
                                                     </div>                                                                                                   
@@ -264,7 +334,7 @@ class Finance extends Component{
                                                                 <label className="name-label">Start Date</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                                <DatePicker selected={this.state.finance_cusinfo.fin_start} name="fin_start" className="form-control"/>
+                                                                <DatePicker name="fin_start" className="form-control" selected={this.state.f_start_date} onChange={this.startDateChange}/>
                                                             </div>
                                                         </div> 
                                                         <div className="row">
@@ -272,7 +342,7 @@ class Finance extends Component{
                                                                 <label className="name-label">End Date</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                                <DatePicker selected={this.state.finance_cusinfo.fin_end} name="fin_end" className="form-control"/>
+                                                                <DatePicker name="fin_end" className="form-control" selected={this.state.f_end_date} onChange={this.endDateChange}/>
                                                             </div>
                                                         </div>   
                                                     </div>
