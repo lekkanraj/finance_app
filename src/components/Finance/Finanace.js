@@ -20,6 +20,7 @@ class Finance extends Component{
             error_message:'',
             lines:[],
             linetypes:[],
+            f_fin_id:'',
             f_fin_amt:'',
             f_comp_amt:'',
             f_hand_amt:'',
@@ -82,12 +83,17 @@ class Finance extends Component{
         {
             this.setState({finance_cusinfo:[0]});
             this.setState({finance_cusinfo:responsejson[0]});
-            this.setState({f_fin_amt:'',f_comp_amt:'',f_hand_amt:'',f_hold_amt:'',f_profit_amt:'',f_start_date:'',f_end_date:''});
+            this.setState({f_fin_id:'',f_fin_amt:'',f_comp_amt:'',f_hand_amt:'',f_hold_amt:'',f_profit_amt:'',f_start_date:'',f_end_date:''});
             var st_date=this.state.finance_cusinfo.fin_start;
             console.log(st_date);
             if(st_date){
                 this.setState({f_start_date:moment(st_date)});
             }
+            var fin_id=this.state.finance_cusinfo.fin_id;
+            if(fin_id!=""){
+                this.setState({f_fin_id:fin_id});
+            }
+            
 
         
         }
@@ -126,8 +132,12 @@ class Finance extends Component{
         }
 
         if(name=="hold_amt"){
-            var to_hand;
+            var to_hand,pre_bal_amt;
             to_hand=(this.state.f_fin_amt-val);
+            pre_bal_amt=this.state.finance_cusinfo.bal_amt;
+            if(pre_bal_amt!=''){
+                to_hand=(to_hand-pre_bal_amt);
+            }
             this.setState({f_hold_amt:val,f_hand_amt:to_hand});
         }
     }
@@ -169,14 +179,28 @@ class Finance extends Component{
                                         <td>Sno</td>
                                         <td>Customer Name</td>
                                         <td>Area-Line</td>
+                                        <td>Line Type</td>
+                                        <td>Work</td>
+                                        <td>Start Date</td>
+                                        <td>Finance Amount</td>
+                                        <td>Received Amount</td>
+                                        <td>Balance Amount</td>
+                                        <td>End Date</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {this.props.customers.fin_customers.map((customer,i)=>
                                         <tr>
-                                            <td>{i+1}</td>
+                                            <td className="text-center">{i+1}</td>
                                             <td><a onClick={()=>this.editFinance(customer.cus_id)} href="javascript:;" data-toggle="modal" data-target="#editFinCustomer">{customer.cus_name}</a></td>
                                             <td>{customer.area ? customer.area :"-"}</td>
+                                            <td>{customer.linetype_name ? customer.linetype_name :"-"}</td>
+                                            <td>{customer.job_name ? customer.job_name :"-"}</td>
+                                            <td className="text-center">{customer.fin_start ? customer.fin_start :"-"}</td>
+                                            <td className="text-center">{customer.fin_amt ? customer.fin_amt :"-"}</td>
+                                            <td className="text-center">{customer.rec_amt ? customer.rec_amt :"-"}</td>
+                                            <td className="text-center">{customer.bal_amt ? customer.bal_amt :"-"}</td>
+                                            <td className="text-center">{customer.fin_end ? customer.fin_end :"-"}</td>
                                         </tr>
                                     )}
                                     {this.props.customers.fin_customers.length==0 ?                                    
@@ -196,7 +220,7 @@ class Finance extends Component{
                                 <div className="modal-content">
                                     <div className="modal-header">
                                         <div className="modal-title text-center">
-                                            <h4 className="text-info">Edit Customer Info</h4>                                           
+                                            <h4 className="text-info">Update Finance Info</h4>                                           
                                         </div>
                                         <div className="float-right">
                                                 <button className="close" id="updateformclose" data-dismiss="modal">&times;</button>
@@ -272,7 +296,7 @@ class Finance extends Component{
                                                                 <label className="name-label">Fin Id</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                                <input className="form-control" id="fin_id" name="fin_id" readonly="true" value={this.state.finance_cusinfo.fin_id} />
+                                                                <input className="form-control" id="fin_id" name="fin_id" readonly="true" value={this.state.f_fin_id} />
                                                             </div>
                                                         </div> 
                                                         <div className="row">
@@ -312,7 +336,7 @@ class Finance extends Component{
                                                                 <label className="name-label">By Hand</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                                <input className="form-control" id="by_hand_amt" name="by_hand_amt"  value={this.state.f_hand_amt} />
+                                                                <input className="form-control" id="by_hand_amt" name="by_hand_amt"  readonly="true" value={this.state.f_hand_amt} />
                                                             </div>
                                                         </div> 
                                                         <div className="row">
@@ -320,7 +344,7 @@ class Finance extends Component{
                                                                 <label className="name-label">Company Amount</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                                <input className="form-control" id="cmpy_amt" name="cmpy_amt" onChange={this.finupdate} value={this.state.f_comp_amt}/>
+                                                                <input className="form-control" id="cmpy_amt" name="cmpy_amt" readonly="true" value={this.state.f_comp_amt}/>
                                                             </div>
                                                         </div>  
                                                     </div>                                                                                                   
@@ -339,7 +363,7 @@ class Finance extends Component{
                                                         </div> 
                                                         <div className="row">
                                                             <div className="col-lg-4 col-sm-12">
-                                                                <label className="name-label">End Date</label>
+                                                                <label className="name-label">Pre fin End Date</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
                                                                 <DatePicker name="fin_end" className="form-control" selected={this.state.f_end_date} onChange={this.endDateChange}/>
@@ -360,7 +384,7 @@ class Finance extends Component{
                                                                 <label className="name-label">Status</label>
                                                             </div>
                                                             <div className="col-lg-8 col-sm-12">
-                                                                
+                                                                <label>: {this.state.finance_cusinfo.finance_status}</label>
                                                             </div>
                                                         </div>  
                                                     </div>                                                                                                   
