@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, NavLink} from 'react-router-dom';
 
 class Header extends Component{
 
@@ -15,16 +15,19 @@ class Header extends Component{
                     {
                         sessionStorage.getItem('isloggedin')==1 ? [
                             <li className="nav-item p-1">
-                                <Link className="nav-link" to ="/">Home</Link>
+                                <NavLink exact className="nav-link" to ="/home">Home</NavLink>
                             </li>,
                             <li className="nav-item p-1">
-                                <Link className="nav-link" to="/customers">Customers</Link>
+                                <NavLink exact className="nav-link" to="/lines">Lines</NavLink>
                             </li>,
                             <li className="nav-item p-1">
-                                <Link className="nav-link" to="/lines">Lines</Link>
+                                <NavLink exact className="nav-link" to="/customers">Customers</NavLink>
                             </li>,
                             <li className="nav-item p-1">
-                                <Link className="nav-link" to="/finance">Finance Master</Link>
+                                <NavLink exact className="nav-link" to="/finance">Finance</NavLink>
+                            </li>,
+                            <li className="nav-item p-1">
+                                <NavLink exact className="nav-link" to="/collection">Collections</NavLink>
                             </li>
                         ] :''
                     }

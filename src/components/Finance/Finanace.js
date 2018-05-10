@@ -155,8 +155,8 @@ class Finance extends Component{
     render(){
         return(
             <div className="row">
-                <div className="col-lg-2">&nbsp;</div>
-                <div className="col-lg-10">
+                <div className="col-lg-1">&nbsp;</div>
+                <div className="col-lg-11">
                     {this.state.success_message ? 
                         <div className="alert alert-info text-warning data-dissmissble">
                             {this.state.success_message}<button className="close" data-dismiss="alert">&times;</button>
@@ -167,8 +167,6 @@ class Finance extends Component{
                             {this.state.error_message}<button className="close" data-dismiss="alert">&times;</button>
                         </div>
                     :''}
-                    
-                    
                     <div className="row">
                     <Search />
                     </div>
