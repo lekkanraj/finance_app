@@ -164,7 +164,7 @@ class Customers extends Component{
                                     {this.state.customers.length==0 ?                                    
                                         (
                                             <tr>
-                                                <td colspan="3">No Custoemrs Found</td>
+                                                <td colspan="7">No Custoemrs Found</td>
                                             </tr>
 
                                         ):''

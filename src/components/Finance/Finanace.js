@@ -204,7 +204,7 @@ class Finance extends Component{
                                     {this.props.customers.fin_customers.length==0 ?                                    
                                         (
                                             <tr>
-                                                <td colspan="3">No Customers Found</td>
+                                                <td colspan="10">No Customers Found</td>
                                             </tr>
 
                                         ):''
