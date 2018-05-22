@@ -10,6 +10,9 @@ import {HOST} from '../../constants/constants';
 class Collection extends Component{
     constructor(props){
         super(props);
+        if(sessionStorage.getItem('isloggedin')!=1){
+            this.props.history.push('/');
+        }
         this.state={
             lines:[],
             linetypes:[],

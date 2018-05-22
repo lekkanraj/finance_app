@@ -12,6 +12,10 @@ import {HOST} from '../../constants/constants';
 class Finance extends Component{
     constructor(props){
         super(props);
+        if(sessionStorage.getItem('isloggedin')!=1){
+            this.props.history.push('/');
+        }
+        
         this.state={
             finance_cus:[],
             finance_cusinfo:[0],

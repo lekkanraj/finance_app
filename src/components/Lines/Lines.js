@@ -4,6 +4,11 @@ import {HOST} from '../../constants/constants';
 class Lines extends Component{
     constructor(props){
         super(props);
+
+        if(sessionStorage.getItem('isloggedin')!=1){
+            this.props.history.push('/');
+        }
+        
         this.state={lines:[],linetypes:[],addstatus:'',getlineinfo:[0]};
 
         this.addLine=this.addLine.bind(this);
