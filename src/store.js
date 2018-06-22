@@ -1,5 +1,6 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import financeReducer from './reducers/financeReducer';
+import profileReducer from './reducers/profileReducer';
 
 const mylogger=(store)=>(next)=>(action)=>{
     console.log("Logged",action);
@@ -7,7 +8,8 @@ const mylogger=(store)=>(next)=>(action)=>{
 }
 const store=createStore(
     combineReducers({
-        finRed:financeReducer
+        finRed:financeReducer,
+        proRed:profileReducer
     }),
     {},
     applyMiddleware(mylogger)

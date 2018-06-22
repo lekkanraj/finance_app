@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {Link, NavLink} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 class Header extends Component{
 
@@ -46,9 +47,10 @@ class Header extends Component{
                         sessionStorage.getItem('isloggedin')==1 ? (
                             <div className="mt-3 float-right">
                                 <button className="dropdown-toggle" data-toggle="dropdown">
-                                    Welcome {sessionStorage.getItem('firstname')},
+                                    Welcome {this.props.Profile.username}-{},
                                 </button>
                                 <div className="dropdown-menu">
+                                    <Link className="dropdown-itm p-2" to ="/profile">Profile</Link><br></br>
                                     <Link className="dropdown-itm p-2" to ="/logout">Logout</Link>
                                 </div>
                             </div>
@@ -60,4 +62,10 @@ class Header extends Component{
     }
 }
 
-export default Header;
+const mapStatetoProps=(state)=>{
+    return{
+        Profile:state.proRed
+    }
+}
+
+export default connect(mapStatetoProps)(Header);

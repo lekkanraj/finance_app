@@ -13,6 +13,8 @@ import Customers from './components/Customers/Customers';
 import Lines from './components/Lines/Lines';
 import Finance from './components/Finance/Finanace';
 import Collection from './components/Collection/Collection';
+import Profile from './components/Profile/Profile';
+
 
 //Import Styles
 import './custom.css';
@@ -30,6 +32,7 @@ class App extends Component {
               <Route exact path="/" component={Login} />
               <Route exact path='/login' component={Login} />
               <Route exact path="/logout" component={Logout} />
+              <Route exact path="/profile" component={Profile} />
               <Route exact path="/home" component={Home} />
               <Route exact path="/customers" component={Customers} />
               <Route exact path="/lines" component={Lines} />
